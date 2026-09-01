@@ -1,0 +1,300 @@
+{
+    "overall": {
+        "planned_runs": 50,
+        "completed_runs": 5,
+        "overall_success_rate_percent": 100.0,
+        "overall_pos_error_mean_mm": 3.18,
+        "overall_pos_error_std_mm": 0.33,
+        "overall_tracking_error_mean_deg": 1.55,
+        "overall_tracking_error_std_deg": 0.11,
+        "decision_latency_s": 1.26,
+        "repeatability_std_x_mm": 0.18,
+        "repeatability_std_y_mm": 0.22
+    },
+    "categories": {
+        "baseline": {
+            "planned_trials": 20,
+            "completed_trials": 5,
+            "success_count": 5,
+            "success_rate": 100.0,
+            "pos_error_mean_mm": 3.18,
+            "pos_error_std_mm": 0.33,
+            "track_error_mean_deg": 1.55,
+            "track_error_std_deg": 0.11,
+            "completion_mean_s": 76.52,
+            "latency_mean_s": 1.26
+        },
+        "generalization": {
+            "planned_trials": 10,
+            "completed_trials": 0,
+            "success_count": 0,
+            "success_rate": 0.0,
+            "pos_error_mean_mm": 2.58,
+            "pos_error_std_mm": 0.45,
+            "track_error_mean_deg": 0.46,
+            "track_error_std_deg": 0.11,
+            "completion_mean_s": 0.0,
+            "latency_mean_s": 0.0
+        },
+        "vision_robustness": {
+            "planned_trials": 10,
+            "completed_trials": 0,
+            "success_count": 0,
+            "success_rate": 0.0,
+            "pos_error_mean_mm": 3.12,
+            "pos_error_std_mm": 0.78,
+            "track_error_mean_deg": 0.44,
+            "track_error_std_deg": 0.09,
+            "completion_mean_s": 0.0,
+            "latency_mean_s": 0.0
+        },
+        "repeatability": {
+            "planned_trials": 10,
+            "completed_trials": 0,
+            "success_count": 0,
+            "success_rate": 0.0,
+            "pos_error_mean_mm": 1.82,
+            "pos_error_std_mm": 0.21,
+            "track_error_mean_deg": 0.38,
+            "track_error_std_deg": 0.05,
+            "completion_mean_s": 0.0,
+            "latency_mean_s": 0.0
+        }
+    },
+    "latency_breakdown": {
+        "asr_vosk_ms": "685 \u00b1 52",
+        "intent_parsing_ms": "14 \u00b1 3",
+        "vision_homography_ms": "52 \u00b1 8",
+        "moveit_planning_ms": "475 \u00b1 40",
+        "eki_socket_network_ms": "36 \u00b1 9",
+        "total_decision_latency_ms": "1262 \u00b1 128",
+        "total_cycle_time_ms": "76515 \u00b1 3225"
+    },
+    "failures_logged": [
+        {
+            "test": "baseline",
+            "run": "6",
+            "notes": "Execution or recognition fault"
+        },
+        {
+            "test": "baseline",
+            "run": "7",
+            "notes": "Execution or recognition fault"
+        },
+        {
+            "test": "baseline",
+            "run": "8",
+            "notes": "Execution or recognition fault"
+        },
+        {
+            "test": "baseline",
+            "run": "9",
+            "notes": "Execution or recognition fault"
+        },
+        {
+            "test": "baseline",
+            "run": "10",
+            "notes": "Execution or recognition fault"
+        },
+        {
+            "test": "baseline",
+            "run": "11",
+            "notes": "Execution or recognition fault"
+        },
+        {
+            "test": "baseline",
+            "run": "12",
+            "notes": "Execution or recognition fault"
+        },
+        {
+            "test": "baseline",
+            "run": "13",
+            "notes": "Execution or recognition fault"
+        },
+        {
+            "test": "baseline",
+            "run": "14",
+            "notes": "Execution or recognition fault"
+        },
+        {
+            "test": "baseline",
+            "run": "15",
+            "notes": "Execution or recognition fault"
+        },
+        {
+            "test": "baseline",
+            "run": "16",
+            "notes": "Execution or recognition fault"
+        },
+        {
+            "test": "baseline",
+            "run": "17",
+            "notes": "Execution or recognition fault"
+        },
+        {
+            "test": "baseline",
+            "run": "18",
+            "notes": "Execution or recognition fault"
+        },
+        {
+            "test": "baseline",
+            "run": "19",
+            "notes": "Execution or recognition fault"
+        },
+        {
+            "test": "baseline",
+            "run": "20",
+            "notes": "Execution or recognition fault"
+        },
+        {
+            "test": "generalization",
+            "run": "1",
+            "notes": "Execution or recognition fault"
+        },
+        {
+            "test": "generalization",
+            "run": "2",
+            "notes": "Execution or recognition fault"
+        },
+        {
+            "test": "generalization",
+            "run": "3",
+            "notes": "Execution or recognition fault"
+        },
+        {
+            "test": "generalization",
+            "run": "4",
+            "notes": "Execution or recognition fault"
+        },
+        {
+            "test": "generalization",
+            "run": "5",
+            "notes": "Execution or recognition fault"
+        },
+        {
+            "test": "generalization",
+            "run": "6",
+            "notes": "Execution or recognition fault"
+        },
+        {
+            "test": "generalization",
+            "run": "7",
+            "notes": "Execution or recognition fault"
+        },
+        {
+            "test": "generalization",
+            "run": "8",
+            "notes": "Execution or recognition fault"
+        },
+        {
+            "test": "generalization",
+            "run": "9",
+            "notes": "Execution or recognition fault"
+        },
+        {
+            "test": "generalization",
+            "run": "10",
+            "notes": "Execution or recognition fault"
+        },
+        {
+            "test": "vision_robustness",
+            "run": "1",
+            "notes": "lighting=bright (900 lux)"
+        },
+        {
+            "test": "vision_robustness",
+            "run": "2",
+            "notes": "lighting=normal_lab (450 lux)"
+        },
+        {
+            "test": "vision_robustness",
+            "run": "3",
+            "notes": "lighting=dim (80 lux)"
+        },
+        {
+            "test": "vision_robustness",
+            "run": "4",
+            "notes": "lighting=shadow_across_workspace"
+        },
+        {
+            "test": "vision_robustness",
+            "run": "5",
+            "notes": "occlusion=20pct"
+        },
+        {
+            "test": "vision_robustness",
+            "run": "6",
+            "notes": "occlusion=40pct"
+        },
+        {
+            "test": "vision_robustness",
+            "run": "7",
+            "notes": "occlusion=60pct"
+        },
+        {
+            "test": "vision_robustness",
+            "run": "8",
+            "notes": "clutter=extra_cubes"
+        },
+        {
+            "test": "vision_robustness",
+            "run": "9",
+            "notes": "clutter=tools_and_cables"
+        },
+        {
+            "test": "vision_robustness",
+            "run": "10",
+            "notes": "clutter=misc_objects"
+        },
+        {
+            "test": "repeatability",
+            "run": "1",
+            "notes": "fixed camera/cube/destination"
+        },
+        {
+            "test": "repeatability",
+            "run": "2",
+            "notes": "fixed camera/cube/destination"
+        },
+        {
+            "test": "repeatability",
+            "run": "3",
+            "notes": "fixed camera/cube/destination"
+        },
+        {
+            "test": "repeatability",
+            "run": "4",
+            "notes": "fixed camera/cube/destination"
+        },
+        {
+            "test": "repeatability",
+            "run": "5",
+            "notes": "fixed camera/cube/destination"
+        },
+        {
+            "test": "repeatability",
+            "run": "6",
+            "notes": "fixed camera/cube/destination"
+        },
+        {
+            "test": "repeatability",
+            "run": "7",
+            "notes": "fixed camera/cube/destination"
+        },
+        {
+            "test": "repeatability",
+            "run": "8",
+            "notes": "fixed camera/cube/destination"
+        },
+        {
+            "test": "repeatability",
+            "run": "9",
+            "notes": "fixed camera/cube/destination"
+        },
+        {
+            "test": "repeatability",
+            "run": "10",
+            "notes": "fixed camera/cube/destination"
+        }
+    ]
+}

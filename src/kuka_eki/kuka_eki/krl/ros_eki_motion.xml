@@ -38,6 +38,8 @@
             <ELEMENT Tag="RobotCommand/Cart/@C" Type="REAL" />
             <!-- Max velocity scaling -->
             <ELEMENT Tag="RobotCommand/Velocity" Type="REAL" />
+            <!-- Motion approximation mode (0: exact stop, 1: continuous blending C_PTP/C_DIS) -->
+            <ELEMENT Tag="RobotCommand/Approx" Type="INT" />
         </XML>
     </RECEIVE>
 </ETHERNETKRL>

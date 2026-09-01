@@ -26,5 +26,6 @@ __pycache__/
 .idea/
 
 YOLOv11/
-demo_data/
 benchmark_data/
+~$*
+*.tmp

@@ -62,6 +62,7 @@ TODO (future upgrade path):
 """
 
 import threading
+from collections import deque
 
 import rclpy
 from rclpy.node import Node
@@ -159,20 +160,24 @@ class VisionNode(Node):
         self._last_mask = None
         self._last_contour_areas = []
 
-        self.cap = cv2.VideoCapture(CAMERA_DEVICE_INDEX)
+        self.cap = cv2.VideoCapture(CAMERA_DEVICE_INDEX, cv2.CAP_V4L2 if hasattr(cv2, 'CAP_V4L2') else cv2.CAP_ANY)
         if not self.cap.isOpened():
             self.get_logger().error(f"Could not open camera device index {CAMERA_DEVICE_INDEX}")
             raise RuntimeError("Camera open failed")
 
-        # Serializes all access to self.cap between the detection service
-        # callback and the periodic image-publishing timer, since both read
-        # from the same underlying device.
+        # Set minimal V4L2 hardware driver buffer size to eliminate latency & stale frames
+        self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+
+        # Thread-safe RAM vector ring buffer (capped maxlen=2, <2 MB footprint)
+        # Obsolete frame matrices pop automatically and get garbage-collected instantly
+        self._frame_buffer = deque(maxlen=2)
+
+        # Serializes access to self.cap
         self._cap_lock = threading.Lock()
 
         self.srv = self.create_service(DetectObject, 'detect_object', self._handle_request)
 
-        # --- Continuous image publisher (for episode_recorder.py and any ---
-        # --- other node that wants frames without opening its own capture) ---
+        # --- Continuous image publisher ---
         self.declare_parameter('publish_rate_hz', DEFAULT_PUBLISH_RATE_HZ)
         publish_rate = self.get_parameter('publish_rate_hz').value
         self.declare_parameter('camera_frame_id', 'camera_optical_frame')
@@ -184,33 +189,28 @@ class VisionNode(Node):
 
         self.get_logger().info(
             "vision_node ready -- serving /detect_object, "
-            f"publishing /camera/image_raw at {publish_rate:.1f} Hz"
+            f"publishing /camera/image_raw at {publish_rate:.1f} Hz (RAM Ring Buffer maxlen=2)"
         )
 
     def _capture_fresh_frame(self):
-        """Grab-and-flush then read one fresh frame. Locked so this can't
-        interleave with the periodic publisher's own grab/read on the same
-        cv2.VideoCapture."""
+        """Returns the most recent in-memory frame matrix from the RAM ring buffer."""
         with self._cap_lock:
-            for _ in range(BUFFER_FLUSH_FRAMES):
-                self.cap.grab()
-            ret, frame = self.cap.read()
-        if not ret:
+            if self._frame_buffer:
+                return self._frame_buffer[-1]
+            ok, frame = self.cap.read()
+        if not ok:
             return None
         return frame
 
     def _publish_frame(self):
-        """Timer callback: grab one frame and publish it on /camera/image_raw.
-        Uses the same lock as _capture_fresh_frame() so this and an
-        in-flight /detect_object request never read the device at the same
-        time."""
+        """Timer callback: capture 1 frame matrix directly into RAM ring buffer and publish."""
         with self._cap_lock:
-            for _ in range(BUFFER_FLUSH_FRAMES):
-                self.cap.grab()
             ok, frame = self.cap.read()
+            if ok:
+                self._frame_buffer.append(frame)
         if not ok:
             self.get_logger().warn(
-                'Camera read failed during periodic publish -- skipping this frame.',
+                'Camera read failed during periodic publish -- skipping frame.',
                 throttle_duration_sec=5.0,
             )
             return

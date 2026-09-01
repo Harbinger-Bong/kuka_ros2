@@ -27,7 +27,7 @@ class EkiMotionClient:
     def connect(self) -> None:
         self._tcp_client.connect()
 
-    def ptp(self, target: Union[Axis, Pos], max_velocity_scaling=1.0) -> None:
+    def ptp(self, target: Union[Axis, Pos], max_velocity_scaling=1.0, approx: int = 0) -> None:
         command_type: CommandType
         if isinstance(target, Axis):
             command_type = CommandType.PTP_AXIS
@@ -35,30 +35,30 @@ class EkiMotionClient:
             command_type = CommandType.PTP_CART
         else:
             raise TypeError("Expected argument of type Axis or Pos")
-        command: RobotCommand = RobotCommand(command_type, target, max_velocity_scaling)
+        command: RobotCommand = RobotCommand(command_type, target, max_velocity_scaling, approx)
         self._tcp_client.sendall(command.to_xml())
 
-    def ptp_rel(self, target: Axis, max_velocity_scaling: float = 1.0) -> None:
+    def ptp_rel(self, target: Axis, max_velocity_scaling: float = 1.0, approx: int = 0) -> None:
         if not isinstance(target, Axis):
             raise TypeError("Expected argument of Axis")
         command: RobotCommand = RobotCommand(
-            CommandType.PTP_AXIS_REL, target, max_velocity_scaling
+            CommandType.PTP_AXIS_REL, target, max_velocity_scaling, approx
         )
         self._tcp_client.sendall(command.to_xml())
 
-    def lin(self, target: Pos, max_velocity_scaling=1.0) -> None:
+    def lin(self, target: Pos, max_velocity_scaling=1.0, approx: int = 0) -> None:
         if not isinstance(target, Pos):
             raise TypeError("Expected argument of Pos")
         command: RobotCommand = RobotCommand(
-            CommandType.LIN_CART, target, max_velocity_scaling
+            CommandType.LIN_CART, target, max_velocity_scaling, approx
         )
         self._tcp_client.sendall(command.to_xml())
 
-    def lin_rel(self, target: Pos, max_velocity_scaling=1.0) -> None:
+    def lin_rel(self, target: Pos, max_velocity_scaling=1.0, approx: int = 0) -> None:
         if not isinstance(target, Pos):
             raise TypeError("Expected argument of Pos")
         command: RobotCommand = RobotCommand(
-            CommandType.LIN_CART_REL, target, max_velocity_scaling
+            CommandType.LIN_CART_REL, target, max_velocity_scaling, approx
         )
         self._tcp_client.sendall(command.to_xml())
 

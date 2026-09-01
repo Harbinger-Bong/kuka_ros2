@@ -43,6 +43,7 @@ def  ros_eki()
   decl e6pos cart_pos_tgt
   decl axis joint_pos_tgt
   decl real max_vel_scale_tgt
+  decl int approx_tgt
   decl int elements_read
   ;endfold
   
@@ -68,28 +69,49 @@ def  ros_eki()
   cart_pos_tgt = $pos_act_mes
   max_vel_scale_tgt = 1.0
   cmd_type_tgt = 0
+  approx_tgt = 0
 
   ; BCO (Block COincidence) run to current position
   ; (requied for below loop continue before first incoming command)
   ptp joint_pos_tgt
   
-  ; Loop forever
-  $advance = 0
+  ; Loop forever with KRC4 advance run planning buffer enabled
+  $advance = 3
   loop
     ; Get new command from buffer if present
-    elements_read = ros_eki_get(cmd_type_tgt, joint_pos_tgt, cart_pos_tgt, max_vel_scale_tgt)  
+    elements_read = ros_eki_get(cmd_type_tgt, joint_pos_tgt, cart_pos_tgt, max_vel_scale_tgt, approx_tgt)  
     $ov_pro = 100 * max_vel_scale_tgt
     switch cmd_type_tgt
     case 1
-      ptp joint_pos_tgt
+      if approx_tgt == 1 then
+        ptp joint_pos_tgt C_PTP
+      else
+        ptp joint_pos_tgt
+      endif
     case 2
-      ptp cart_pos_tgt
+      if approx_tgt == 1 then
+        ptp cart_pos_tgt C_PTP
+      else
+        ptp cart_pos_tgt
+      endif
     case 3
-      lin cart_pos_tgt
+      if approx_tgt == 1 then
+        lin cart_pos_tgt C_DIS
+      else
+        lin cart_pos_tgt
+      endif
     case 4
-      ptp_rel joint_pos_tgt
+      if approx_tgt == 1 then
+        ptp_rel joint_pos_tgt C_PTP
+      else
+        ptp_rel joint_pos_tgt
+      endif
     case 5
-      lin_rel cart_pos_tgt 
+      if approx_tgt == 1 then
+        lin_rel cart_pos_tgt C_DIS
+      else
+        lin_rel cart_pos_tgt
+      endif
     endswitch
   endloop
   
@@ -154,12 +176,13 @@ def ros_eki_state_send()
   $timer[2] = -10  ; ~10 ms for above send + 10 ms interrupt timer -> ~50 Hz state transmission
 end
 
-deffct int ros_eki_get(cmd_type_cmd :out, joint_pos_cmd :out, cart_pos_cmd :out, max_vel_scale_cmd :out)
+deffct int ros_eki_get(cmd_type_cmd :out, joint_pos_cmd :out, cart_pos_cmd :out, max_vel_scale_cmd :out, approx_cmd :out)
   decl eki_status eki_ret
   decl int cmd_type_cmd
   decl e6pos cart_pos_cmd
   decl axis joint_pos_cmd
   decl real max_vel_scale_cmd
+  decl int approx_cmd
   
   if not $flag[1] then
     return 0
@@ -170,6 +193,7 @@ deffct int ros_eki_get(cmd_type_cmd :out, joint_pos_cmd :out, cart_pos_cmd :out,
     return 0
   endif
   
+  approx_cmd = 0
   eki_ret = eki_getint("ros_eki_motion", "RobotCommand/Type", cmd_type_cmd)
   
   eki_ret = eki_getreal("ros_eki_motion", "RobotCommand/Axis/@A1", joint_pos_cmd.a1)
@@ -187,6 +211,11 @@ deffct int ros_eki_get(cmd_type_cmd :out, joint_pos_cmd :out, cart_pos_cmd :out,
   eki_ret = eki_getreal("ros_eki_motion", "RobotCommand/Cart/@C", cart_pos_cmd.c)
   
   eki_ret = eki_getreal("ros_eki_motion", "RobotCommand/Velocity", max_vel_scale_cmd)
+  
+  eki_ret = eki_checkbuffer("ros_eki_motion", "RobotCommand/Approx")
+  if eki_ret.buff > 0 then
+    eki_ret = eki_getint("ros_eki_motion", "RobotCommand/Approx", approx_cmd)
+  endif
   
   return 1
 endfct

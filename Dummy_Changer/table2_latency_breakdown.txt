@@ -1,0 +1,12 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TABLE 2: END-TO-END LATENCY PROFILE ACROSS PIPELINE SUBSYSTEMS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Acoustic Sampling & ASR (Vosk):        685 ± 52 ms
+2. Intent Parsing & Dispatch:             14 ± 3 ms
+3. Image Capture & Homography (OpenCV):   52 ± 8 ms
+4. MoveIt 2 Motion Planning (Pilz):       475 ± 40 ms
+5. EKI XML Socket & Network Layer:        36 ± 9 ms
+─────────────────────────────────────────────────────────────────────────
+TOTAL DECISION LATENCY (T_dec):           1262 ± 128 ms
+TOTAL CYCLE TIME (T_comp):                76515 ± 3225 ms
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -85,6 +85,7 @@ class RobotCommand:
     command_type: CommandType
     target: Union[Axis, Pos]
     velocity_scaling: float
+    approx: int = 0
 
     def to_xml(self) -> bytes:
         root = ET.Element("RobotCommand")
@@ -92,6 +93,7 @@ class RobotCommand:
         self.target.to_xml(root)
         Pos().to_xml(root) if isinstance(self.target, Axis) else Axis().to_xml(root)
         ET.SubElement(root, "Velocity").text = str(self.velocity_scaling)
+        ET.SubElement(root, "Approx").text = str(self.approx)
         return ET.tostring(root)
 
 

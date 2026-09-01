@@ -132,10 +132,7 @@ class VisionDetectNode(Node):
         self.homography = np.load(homography_path)
         self.get_logger().info(f"Loaded homography from {homography_path}")
 
-        self.cap = cv2.VideoCapture(self.camera_index)
-        # Ask the driver for a minimal buffer -- not all V4L2 backends honor
-        # this, hence the explicit drain in handle_detect_object() below as
-        # a backstop.
+        self.cap = cv2.VideoCapture(self.camera_index, cv2.CAP_V4L2 if hasattr(cv2, 'CAP_V4L2') else cv2.CAP_ANY)
         self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
         if not self.cap.isOpened():
             self.get_logger().error(f"Could not open camera index {self.camera_index}")
@@ -156,14 +153,6 @@ class VisionDetectNode(Node):
 
     def handle_detect_object(self, request, response):
         target_class = request.target_class.strip() if request.target_class else ""
-
-        # Backstop for CAP_PROP_BUFFERSIZE not being honored by the backend:
-        # discard a few queued frames with grab() (cheap -- no decode) so the
-        # frame we actually decode below reflects the current scene, not
-        # whatever was sitting in the driver's buffer from before this
-        # request came in.
-        for _ in range(5):
-            self.cap.grab()
 
         ret, frame = self.cap.read()
         if not ret or frame is None:

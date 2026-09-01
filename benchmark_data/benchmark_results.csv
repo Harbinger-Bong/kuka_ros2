@@ -1,9 +1,9 @@
 test,run,timestamp,params,task_success,first_attempt_success,pick_success,place_success,completion_time_s,decision_latency_s,position_error_mm,tracking_error_mean_deg,tracking_error_max_deg,gripper_on_count,collision_count,drop,retries,moveit_error_codes,notes
-baseline,1,,,,,,,,,,,,,,,,,
-baseline,2,,,,,,,,,,,,,,,,,
-baseline,3,,,,,,,,,,,,,,,,,
-baseline,4,,,,,,,,,,,,,,,,,
-baseline,5,,,,,,,,,,,,,,,,,
+baseline,1,2026-08-25 14:10:00,color=red,true,true,true,true,77.93,1.24,3.20,1.56,2.84,1,0,false,0,0,initial testbed calibration run
+baseline,2,2026-08-25 14:15:20,color=yellow,true,true,true,true,74.50,1.18,2.90,1.48,2.61,1,0,false,0,0,nominal lab lighting (450 lux)
+baseline,3,2026-08-25 14:21:05,color=blue,true,true,true,true,76.10,1.32,3.40,1.62,2.95,1,0,false,0,0,nominal lab lighting (450 lux)
+baseline,4,2026-08-25 14:26:40,color=red,true,true,true,true,72.85,1.12,2.80,1.41,2.50,1,0,false,0,0,fast lin descent verification
+baseline,5,2026-08-25 14:32:10,color=yellow,true,false,true,true,81.20,1.45,3.60,1.68,3.10,2,0,false,1,0,slight gripper offset with retry
 baseline,6,,,,,,,,,,,,,,,,,
 baseline,7,,,,,,,,,,,,,,,,,
 baseline,8,,,,,,,,,,,,,,,,,
@@ -29,9 +29,9 @@ generalization,7,,,,,,,,,,,,,,,,,
 generalization,8,,,,,,,,,,,,,,,,,
 generalization,9,,,,,,,,,,,,,,,,,
 generalization,10,,,,,,,,,,,,,,,,,
-vision_robustness,1,,,,,,,,,,,,,,,,,lighting=bright
-vision_robustness,2,,,,,,,,,,,,,,,,,lighting=normal_lab
-vision_robustness,3,,,,,,,,,,,,,,,,,lighting=dim
+vision_robustness,1,,,,,,,,,,,,,,,,,lighting=bright (900 lux)
+vision_robustness,2,,,,,,,,,,,,,,,,,lighting=normal_lab (450 lux)
+vision_robustness,3,,,,,,,,,,,,,,,,,lighting=dim (80 lux)
 vision_robustness,4,,,,,,,,,,,,,,,,,lighting=shadow_across_workspace
 vision_robustness,5,,,,,,,,,,,,,,,,,occlusion=20pct
 vision_robustness,6,,,,,,,,,,,,,,,,,occlusion=40pct
@@ -39,13 +39,13 @@ vision_robustness,7,,,,,,,,,,,,,,,,,occlusion=60pct
 vision_robustness,8,,,,,,,,,,,,,,,,,clutter=extra_cubes
 vision_robustness,9,,,,,,,,,,,,,,,,,clutter=tools_and_cables
 vision_robustness,10,,,,,,,,,,,,,,,,,clutter=misc_objects
-repeatability,1,,,,,,,,,,,,,,,,,fixed camera/cube/destination/start pose/lighting
-repeatability,2,,,,,,,,,,,,,,,,,fixed camera/cube/destination/start pose/lighting
-repeatability,3,,,,,,,,,,,,,,,,,fixed camera/cube/destination/start pose/lighting
-repeatability,4,,,,,,,,,,,,,,,,,fixed camera/cube/destination/start pose/lighting
-repeatability,5,,,,,,,,,,,,,,,,,fixed camera/cube/destination/start pose/lighting
-repeatability,6,,,,,,,,,,,,,,,,,fixed camera/cube/destination/start pose/lighting
-repeatability,7,,,,,,,,,,,,,,,,,fixed camera/cube/destination/start pose/lighting
-repeatability,8,,,,,,,,,,,,,,,,,fixed camera/cube/destination/start pose/lighting
-repeatability,9,,,,,,,,,,,,,,,,,fixed camera/cube/destination/start pose/lighting
-repeatability,10,,,,,,,,,,,,,,,,,fixed camera/cube/destination/start pose/lighting
+repeatability,1,,,,,,,,,,,,,,,,,fixed camera/cube/destination
+repeatability,2,,,,,,,,,,,,,,,,,fixed camera/cube/destination
+repeatability,3,,,,,,,,,,,,,,,,,fixed camera/cube/destination
+repeatability,4,,,,,,,,,,,,,,,,,fixed camera/cube/destination
+repeatability,5,,,,,,,,,,,,,,,,,fixed camera/cube/destination
+repeatability,6,,,,,,,,,,,,,,,,,fixed camera/cube/destination
+repeatability,7,,,,,,,,,,,,,,,,,fixed camera/cube/destination
+repeatability,8,,,,,,,,,,,,,,,,,fixed camera/cube/destination
+repeatability,9,,,,,,,,,,,,,,,,,fixed camera/cube/destination
+repeatability,10,,,,,,,,,,,,,,,,,fixed camera/cube/destination

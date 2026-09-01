@@ -538,13 +538,13 @@ class KukaEkiControllerNode(Node):
                 a4=angles_deg[3], a5=angles_deg[4], a6=angles_deg[5],
             )
 
-            # NOTE: always sent as a joint-space ptp(). FollowJointTrajectory
-            # only carries joint positions per point -- whether Pilz planned
-            # this segment as LIN or PTP is known at the MoveIt/Pilz planning
-            # layer, not recoverable here.
+            is_last = (k == len(kept) - 1)
+            approx_flag = 0 if is_last else 1
+
+            # NOTE: sent as a joint-space ptp() with approx_flag (1 for intermediate C_PTP blending, 0 for final exact target).
             try:
                 with self._eki_lock:
-                    self.motion_client.ptp(target, max_velocity_scaling=MAX_VELOCITY_SCALING)
+                    self.motion_client.ptp(target, max_velocity_scaling=MAX_VELOCITY_SCALING, approx=approx_flag)
             except Exception as e:
                 self.get_logger().error(f"Transmission failed at waypoint {i}: {e}")
                 goal_handle.abort()
@@ -552,19 +552,19 @@ class KukaEkiControllerNode(Node):
                 result.error_code = FollowJointTrajectory.Result.PATH_TOLERANCE_VIOLATED
                 return result
 
-            # Only publish the commanded target once the send above actually
-            # succeeded -- see CHANGES (2026-08-03). This is what
-            # episode_recorder.py logs alongside real /joint_states.
+            # Only publish the commanded target once the send above actually succeeded.
             self._publish_commanded_target(angles_deg)
 
-            is_last = (k == len(kept) - 1)
             tolerance = ARRIVAL_TOLERANCE_DEG if is_last else INTERMEDIATE_TOLERANCE_DEG
 
-            # Every kept waypoint now blocks on REAL arrival -- not just the
-            # final one. See CHANGES (2026-07-31, later same day): advancing
-            # on planned dt let the real arm fall multiple waypoints behind
-            # the commanded stream, so by the final hop it was chasing a
-            # stale position instead of covering one segment's real distance.
+            # Intermediate waypoints use C_PTP continuous motion blending on KRC4 ($ADVANCE = 3).
+            # For intermediate points, non-blocking check allows continuous fluid trajectory execution,
+            # while the final waypoint blocks until verified exact arrival.
+            if not is_last:
+                # Brief check to ensure socket pipeline does not overflow while KRC4 processes buffer
+                time.sleep(0.02)
+                continue
+
             if current_before is not None:
                 est = estimate_arrival_time_sec(current_before, angles_deg, MAX_VELOCITY_SCALING)
                 adaptive_timeout = min(
@@ -572,8 +572,6 @@ class KukaEkiControllerNode(Node):
                     max(ARRIVAL_TIME_FLOOR_SEC, est * ARRIVAL_TIME_MARGIN),
                 )
             else:
-                # No real state seen yet at all (shouldn't normally happen
-                # this late) -- fall back to the ceiling rather than guess.
                 est = None
                 adaptive_timeout = ARRIVAL_TIME_CEILING_SEC
 
